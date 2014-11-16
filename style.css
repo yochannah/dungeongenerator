@@ -30,3 +30,13 @@ width:50%;
 	width:40%;
 	padding: 8px;
 }
+
+#objectiveType .selected {
+	background-color:gold;
+	color:#111;
+}
+
+#liveGame {
+	clear:both;
+	float:left;
+}
