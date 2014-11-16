@@ -1,5 +1,8 @@
 body {
 	font-family:helvetica,arial, sans-serif;
+	color:#fff;
+	background-color:#333;
+	padding:1em;
 }
 
 #objectiveType li {
@@ -13,6 +16,13 @@ body {
 	max-width:300px;
 	margin-left:4px;
 	display:block;
+
+	list-style-position:inside;
+	}
+
+#objectiveType ul {
+	margin-left:0;
+	padding-left:0;
 }
 
 #objectiveType, #numberOfRooms {
@@ -21,29 +31,75 @@ body {
 
 
 #objectiveType {
-float:left;
-width:50%;
 }
 
 #numberOfRooms {
-	float:right;
-	width:40%;
 	padding: 8px;
 }
+
+#numberOfRooms input{
+	border:solid 1px #555;
+ 	border-radius:3px;
+ 	width:3em;
+ }
 
 #objectiveType .selected {
 	background-color:gold;
 	color:#111;
 }
 
+#generateDungeon {
+	display:none;
+	width:100%;
+	border:0;
+	border-radius:3px;
+	background-color:crimson;
+	color:white;
+	height:5em;
+}
+
 #liveGame {
 	clear:both;
-	float:left;
 	display:none;
 }
 
 #generateRoom {
 width:100%;
+padding:10px;
+min-width:200px;
+border:0;
+border-radius:3px;
 background-color:crimson;
 color:white;
+display:block;
+height:5em;
+}
+
+h1 {
+	font-size:1.2em;
+}
+
+#liveMenu h2, #liveMenu h3 {
+	display:block; 
+	float:left;
+	min-height:2em;
+	line-height:2em;
+	margin-top:0;
+	padding-top:0;
+ } 
+#liveMenu:after {
+	content:"";
+	display:block;
+	clear:both;
+}
+
+
+.flavourtext{
+	  font-style:italic;
+}
+.flavourtext:before {
+  content:'\201C';
+}
+.flavourtext:after {
+  content:'\201D';
 }

@@ -6,12 +6,13 @@ wh.dungeon = {
 	},
 	popup : function(room) {
 		//get template
+		//TODO: Make this dryer. Maybe make a room object model
 		var template = document.getElementById('cardTemplate'),
 		name = $(room).find('name').text(),
 		rules = $(room).find('rules').text(),
 		flavourtext = $(room).find('flavourtext').text(),
 		type = $(room).find('type').text();	
-		var thedoc = window.open('',name,'width=200,height=300,addressbar=0');
+		var thedoc = window.open('',name,'width=200,height=300,top=260');
 		thedoc.document.write(template.innerHTML);
 		thedoc.document.querySelectorAll('h1')[0].innerHTML = name;
 		thedoc.document.querySelectorAll('.rules')[0].innerHTML = rules;
@@ -24,7 +25,7 @@ wh.dungeon = {
 		
 		position = wh.dungeon.current.order[position];
 		if(position === "Objective") {
-			console.log('O')
+			console.log('Objective hit')
 			return wh.dungeon.getObjective();
 		}
 		return wh.dungeon.rawTiles.nonObjectives[position];
@@ -88,26 +89,31 @@ wh.dungeon = {
 				document.querySelectorAll('.selected')[0].className="";
 			}
 			e.target.className = "selected";
+			wh.dungeon.showGenerator();
 			wh.dungeon.handleGeneratorClicks();
 		});
 	},
 	handleGeneratorClicks : function() {
 		$(document.getElementById('generateDungeon')).click(function() {
 			wh.dungeon.current.numberOfTiles = wh.dungeon.getNumberOfRooms();
+			console.log('wtf');
+			document.getElementById('roomNumber').innerHTML = (wh.dungeon.current.numberOfTiles);
 			wh.dungeon.generateDungeon();
 			document.getElementById('liveGame').style.display = "block";
+			document.getElementById('gameSetup').style.display = "none";
 		});
+	},
+	showGenerator : function() {
+		document.getElementById('generateDungeon').style.display = 'block';
 	},
 	generateDungeon : function(){
 		//count non-dungeon tiles
 		var tiles = wh.dungeon.getAllButTileType('Objective'), nos, 
-		finalArray = [],
-		firstHalf = [],
-		secondHalf = [],
+		finalArray = [], firstHalf = [], secondHalf = [],
 		divisionIndex;
 		wh.dungeon.rawTiles.nonObjectives = nos = tiles;
 		//generate x random numbers / tile references
-				divisionIndex = wh.dungeon.getDivisionIndex();
+		divisionIndex = wh.dungeon.getDivisionIndex();
 
 		for(var i = 0; i < nos.length;i++) {
 			finalArray.push(i);
@@ -124,6 +130,8 @@ wh.dungeon = {
 	},
 	setObjective : function(objective) {
 		wh.dungeon.current.objective = objective;
+		console.log(($(objective).find('name').text()));
+		document.getElementById('scenarioName').innerHTML = ($(objective).find('name').text());
 	},
 	getDivisionIndex : function() {
 		divisor = 2;
@@ -136,7 +144,8 @@ wh.dungeon = {
 			wh.dungeon.setupObjectives();
 		});
 	},
-	shuffle : function (array) { //http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+	shuffle : function (array) { 
+		//http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 		var currentIndex = array.length, temporaryValue, randomIndex ;
 
   		// While there remain elements to shuffle...

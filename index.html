@@ -9,25 +9,30 @@
 
 <body>
 
-<div>
+<div id="gameSetup">
 <h1>Generate a new campaign</h1>
 	<div id="selectObjective">
-	Welcome. It's time to choose an objective. You have the following scenarios available:
+	<p>Welcome. It's time to choose an objective. You have the following scenarios available:</p>
 		<ul id="objectiveType">
 		</ul>
 	</div>
 	<div id="numberOfRooms">
 	 I'd like a dungeon with <input type="text" id="numberOfRoomsInput" value="12" /> rooms, please.
 	</div>
-	<button id="generateDungeon">Generate that shizzle<button>
+	<button id="generateDungeon">Generate that shizzle</button>
 </div>
 
 <div id="liveGame">
-<button id="generateRoom">Hit me.</button>	
+	<div id="liveMenu">
+		<h2><span id="scenarioName">ScenarioName</span>: 
+		A <span id="roomNumber">12</span> room dungeon</h2>
+	</div>
+	<button id="generateRoom">Show me the next room, kthx.</button>	
 </div>
 
 
 <script type="text/template" id="cardTemplate">
+<link rel="stylesheet" href="style.css" type="text/css">
 <div>
 	<h1></h1>
 	<p class="flavourtext">F</p>
