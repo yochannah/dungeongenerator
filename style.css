@@ -39,4 +39,11 @@ width:50%;
 #liveGame {
 	clear:both;
 	float:left;
+	display:none;
+}
+
+#generateRoom {
+width:100%;
+background-color:crimson;
+color:white;
 }

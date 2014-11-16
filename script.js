@@ -1,14 +1,33 @@
 var wh = wh || {};
 wh.dungeon = {
 	rawTiles:{},
-	current : {},
+	current : {
+		position: 0
+	},
 	popup : function(room) {
 		//get template
-		var templateText = document.getElementById('cardTemplate').innerHTML;
+		var template = document.getElementById('cardTemplate'),
+		name = $(room).find('name').text(),
+		rules = $(room).find('rules').text(),
+		flavourtext = $(room).find('flavourtext').text(),
+		type = $(room).find('type').text();	
+		var thedoc = window.open('',name,'width=200,height=300,addressbar=0');
+		thedoc.document.write(template.innerHTML);
+		thedoc.document.querySelectorAll('h1')[0].innerHTML = name;
+		thedoc.document.querySelectorAll('.rules')[0].innerHTML = rules;
+		thedoc.document.querySelectorAll('.cardType')[0].innerHTML = type;
+		thedoc.document.querySelectorAll('.flavourtext')[0].innerHTML = flavourtext;
+	},
+	getNextCard : function(){
+		var position = wh.dungeon.current.position;
+		wh.dungeon.current.position++;
 		
-	
-		var thedoc = window.open('','test','width=100,height=200,addressBar=0');
-		thedoc.document.write(templateText);
+		position = wh.dungeon.current.order[position];
+		if(position === "Objective") {
+			console.log('O')
+			return wh.dungeon.getObjective();
+		}
+		return wh.dungeon.rawTiles.nonObjectives[position];
 	},
 	shownTiles : [],
 	readDungeon : function() {
@@ -39,20 +58,31 @@ wh.dungeon = {
 	getNumberOfRooms : function() {
 		return document.getElementById('numberOfRoomsInput').value;
 	},
+	getObjective : function (index) {
+		if(index) {
+			return wh.dungeon.rawTiles.allObjectives[index];
+		} else if (wh.dungeon.current.objective) {
+			return wh.dungeon.current.objective;
+		} else {
+			return false;
+		}		
+	},
 	setupObjectives : function() {
 		var objectiveList = document.getElementById('objectiveType'),
 		objs = wh.dungeon.getTileType('Objective'),
 		objHtml = "";
 		wh.dungeon.rawTiles.allObjectives = objs;
 		$.each(objs, function(i,v) {
-			objHtml += "<li>" + $(v).find('name').text() + "</li>";
+			objHtml += "<li data-index='" + i +"'>" + $(v).find('name').text() + "</li>";
 		});
 		objectiveList.innerHTML = objHtml;
 		wh.dungeon.handleObjectiveClicks();
 	},
 	handleObjectiveClicks : function() {
 		$(document.getElementById('objectiveType')).on('click','li', function(e) {
-			wh.dungeon.setObjective(e.target.innerHTML);
+			console.log($(e.target).data('index'))
+			var obj = wh.dungeon.getObjective($(e.target).data('index'));
+			wh.dungeon.setObjective(obj);
 			//only highlight one at once.
 			if(document.querySelectorAll('.selected').length) {
 				document.querySelectorAll('.selected')[0].className="";
@@ -65,6 +95,7 @@ wh.dungeon = {
 		$(document.getElementById('generateDungeon')).click(function() {
 			wh.dungeon.current.numberOfTiles = wh.dungeon.getNumberOfRooms();
 			wh.dungeon.generateDungeon();
+			document.getElementById('liveGame').style.display = "block";
 		});
 	},
 	generateDungeon : function(){
@@ -130,7 +161,8 @@ $(document).ready(function(){
 
     $('#generateRoom').click(function(){
     	console.log('yay, clicked');
-    	wh.dungeon.popup();
+    	
+    	wh.dungeon.popup(wh.dungeon.getNextCard());
     });
     
 });
