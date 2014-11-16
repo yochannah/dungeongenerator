@@ -1,0 +1,32 @@
+body {
+	font-family:helvetica,arial, sans-serif;
+}
+
+#objectiveType li {
+	list-style-type:none;
+	padding: 8px 16px;
+	background-color:seagreen;
+	border-radius:3px;
+	color:#fff;
+	min-width:200px;
+	margin:4px;
+	max-width:300px;
+	margin-left:4px;
+	display:block;
+}
+
+#objectiveType, #numberOfRooms {
+	box-model:border-box;
+}
+
+
+#objectiveType {
+float:left;
+width:50%;
+}
+
+#numberOfRooms {
+	float:right;
+	width:40%;
+	padding: 8px;
+}

@@ -1,0 +1,38 @@
+<tile-set>
+	<tile id="classic-dungeon-cell">
+		<name>Dungeon Cell</name>
+		<flavourtext>Dark and spooky</flavourtext>
+		<rules>Draw another card immediately</rules>
+		<type>Dungeon room</type>
+		<image>TODO</image>
+	</tile>
+	<tile id="classic-dungeon-cell2">
+		<name>Dungeon Cell 2</name>
+		<flavourtext>Light and airy</flavourtext>
+		<rules>You get 3 gold</rules>
+		<type>Dungeon room</type>
+		<image>TODO</image>
+	</tile>
+	<tile id="classic-objective-1">
+		<name>Dark Doomy Temple</name>
+		<flavourtext>Demons, everywhere</flavourtext>
+		<rules>Boom shaka laka</rules>
+		<type>Objective</type>
+		<image>TODO</image>
+	</tile>
+	<tile id="classic-objective-2">
+		<name>Slimewars</name>
+		<flavourtext>The walls drip</flavourtext>
+		<rules>Lick the walls clean to defeat the room</rules>
+		<type>Objective</type>
+		<image>TODO</image>
+	</tile>
+	<tile id="classic-objective-3">
+		<name>Magic Portal x</name>
+		<flavourtext>The walls drip</flavourtext>
+		<rules>Lick the walls clean to defeat the room</rules>
+		<type>Objective</type>
+		<image>TODO</image>
+	</tile>
+
+</tile-set>
