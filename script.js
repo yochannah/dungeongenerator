@@ -1,3 +1,16 @@
+var Card = Class.extend({
+  init: function(xml){
+  	console.log(xml);
+  }
+});
+
+var Room = Card.extend({
+  init: function(xml){
+  	console.log("Room", xml);
+  }
+});
+
+
 var wh = wh || {};
 wh.dungeon = {
 	rawTiles:{},
@@ -101,10 +114,12 @@ wh.dungeon = {
 			wh.dungeon.generateDungeon();
 			document.getElementById('liveGame').style.display = "block";
 			document.getElementById('gameSetup').style.display = "none";
+    	wh.dungeon.showCard(wh.dungeon.getNextCard());
+			
 		});
 	},
 	showGenerator : function() {
-		document.getElementById('generateDungeon').style.display = 'block';
+		document.getElementById('generateDungeon').style.display = 'block';		
 	},
 	generateDungeon : function(){
 		//count non-dungeon tiles
@@ -161,17 +176,34 @@ wh.dungeon = {
     		array[randomIndex] = temporaryValue;
 		}
   		return array;
+	},
+	showCard : function (room) {
+		var cardArea = document.getElementById('liveCards'),
+	    template = document.getElementById('cardTemplate').innerHTML,
+		name = $(room).find('name').text(),
+		rules = $(room).find('rules').text(),
+		flavourtext = $(room).find('flavourtext').text(),
+		type = $(room).find('type').text();	
+		
+		cardArea.innerHTML = template;			
+		
+		cardArea.querySelectorAll('h1')[0].innerHTML = name;
+		cardArea.querySelectorAll('.flavourtext')[0].innerHTML = flavourtext;	
+		cardArea.querySelectorAll('.cardType')[0].innerHTML = type;	
+		cardArea.querySelectorAll('.rules')[0].innerHTML = rules;	
+		
 	}
 };
+
+
 
 $(document).ready(function(){
 	
 	wh.dungeon.init();
 
     $('#generateRoom').click(function(){
-    	console.log('yay, clicked');
     	
-    	wh.dungeon.popup(wh.dungeon.getNextCard());
+    	wh.dungeon.showCard(wh.dungeon.getNextCard());
     });
     
 });
