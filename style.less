@@ -56,9 +56,14 @@ body {
 #liveGame {
 	clear:both;
 	display:none;
+	text-align:center;
+	#cardArea {
+		text-align:left;
+	}
+	max-width:320px;
 }
 
-#generateRoom {
+/*#generateRoom {
 	width:100%;
 	padding:10px;
 	min-width:200px;
@@ -68,6 +73,12 @@ body {
 	color:white;
 	display:block;
 	height:5em;
+}*/
+
+#generateRoom {
+	background-color:#fff;
+	border-radius:100px;
+	border:solid 1px #333;
 }
 
 h1 {
@@ -127,7 +138,8 @@ h1 {
 	clear:both;
 	background: rgba(255,255,255,0.1);
 	border-radius:8px;
-	max-width:300px;
+	width:300px;
+	margin:0 auto;
 	padding:8px;
 	margin:8px;
 	box-shadow : 1px 1px 1px #000;
