@@ -77,7 +77,7 @@ wh.dungeon = {
 		return document.getElementById('numberOfRoomsInput').value;
 	},
 	getObjective : function (index) {
-		if(index) {
+		if(typeof index == "number") {
 			return wh.dungeon.rawTiles.allObjectives[index];
 		} else if (wh.dungeon.current.objective) {
 			return wh.dungeon.current.objective;
