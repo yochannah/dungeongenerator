@@ -1,0 +1,143 @@
+body {
+	font-family:helvetica,arial, sans-serif;
+	color:#fff;
+	background-color:#333;
+	padding:1em;
+}
+
+#objectiveType { 
+	li {
+		list-style-type:none;
+		padding: 8px 16px;
+		background-color:seagreen;
+		border-radius:3px;
+		color:#fff;
+		min-width:200px;
+		margin:4px;
+		max-width:300px;
+		margin-left:4px;
+		display:block;
+		list-style-position:inside;
+	}
+	 ul {
+		margin-left:0;
+		padding-left:0;
+	}
+	 .selected {
+		background-color:gold;
+		color:#111;
+	}	
+}
+
+#objectiveType, #numberOfRooms {
+	box-model:border-box;
+}
+
+#numberOfRooms {
+ 	padding: 8px;
+
+	 input{
+		border:solid 1px #555;
+		border-radius:3px;
+		width:3em;
+	 }
+}
+
+#generateDungeon {
+	display:none;
+	width:100%;
+	border:0;
+	border-radius:3px;
+	background-color:crimson;
+	color:white;
+	height:5em;
+}
+
+#liveGame {
+	clear:both;
+	display:none;
+}
+
+#generateRoom {
+	width:100%;
+	padding:10px;
+	min-width:200px;
+	border:0;
+	border-radius:3px;
+	background-color:crimson;
+	color:white;
+	display:block;
+	height:5em;
+}
+
+h1 {
+	font-size:1.2em;
+}
+
+#liveMenu {
+	 h2, h3 {
+		display:block; 
+		float:left;
+		min-height:2em;
+		line-height:2em;
+		margin-top:0;
+		padding-top:0;
+		font-weight:normal;
+	} 
+	&:after {
+		content:"";
+		display:block;
+		clear:both;
+	}
+}
+.roomBox {
+	width:20px;
+	height:20px;
+	margin-right:10px;
+	list-style-type:none;
+	display:block;
+	float:left;
+	background-color:#999;
+	&.current {
+	   background-color:red;
+	}
+	&:after {
+		content:' ';
+		color:white;
+		float:left;
+		width:20px;
+		margin-top:5px;
+		margin-left:20px;
+		background-color:#ccc;
+		height:10px;
+	}
+}
+
+.flavourtext {
+  font-style:italic;
+	&:before {
+	  content:'\201C';
+	}
+	&:after {
+	  content:'\201D';
+	}  
+}
+
+#liveCards {
+	clear:both;
+	background: rgba(255,255,255,0.1);
+	border-radius:8px;
+	max-width:300px;
+	padding:8px;
+	margin:8px;
+	box-shadow : 1px 1px 1px #000;
+}
+
+.objectiveRoom {
+	.cardArea {
+	    border:solid 5px yellow;
+	}
+	#generateRoom {
+		display:none;
+	}
+}

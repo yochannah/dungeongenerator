@@ -38,10 +38,14 @@ wh.dungeon = {
 		
 		position = wh.dungeon.current.order[position];
 		if(position === "Objective") {
-			console.log('Objective hit')
+			wh.dungeon.handleObjective();
 			return wh.dungeon.getObjective();
 		}
 		return wh.dungeon.rawTiles.nonObjectives[position];
+	},
+	handleObjective : function() {
+	 	var liveArea = document.getElementById('liveGame');
+	 	liveArea.className += "objectiveRoom";
 	},
 	shownTiles : [],
 	readDungeon : function() {
@@ -109,13 +113,12 @@ wh.dungeon = {
 	handleGeneratorClicks : function() {
 		$(document.getElementById('generateDungeon')).click(function() {
 			wh.dungeon.current.numberOfTiles = wh.dungeon.getNumberOfRooms();
-			console.log('wtf');
 			document.getElementById('roomNumber').innerHTML = (wh.dungeon.current.numberOfTiles);
 			wh.dungeon.generateDungeon();
 			document.getElementById('liveGame').style.display = "block";
 			document.getElementById('gameSetup').style.display = "none";
-    	wh.dungeon.showCard(wh.dungeon.getNextCard());
-			
+			//first card, yay
+    	    wh.dungeon.showCard(wh.dungeon.getNextCard());
 		});
 	},
 	showGenerator : function() {
@@ -202,8 +205,9 @@ $(document).ready(function(){
 	wh.dungeon.init();
 
     $('#generateRoom').click(function(){
-    	
-    	wh.dungeon.showCard(wh.dungeon.getNextCard());
+    	var card = wh.dungeon.getNextCard();
+    	console.log(card);
+    	wh.dungeon.showCard(card);
     });
     
 });

@@ -1,141 +1,127 @@
 body {
-	font-family:helvetica,arial, sans-serif;
-	color:#fff;
-	background-color:#333;
-	padding:1em;
+  font-family: helvetica, arial, sans-serif;
+  color: #fff;
+  background-color: #333;
+  padding: 1em;
 }
-
 #objectiveType li {
-	list-style-type:none;
-	padding: 8px 16px;
-	background-color:seagreen;
-	border-radius:3px;
-	color:#fff;
-	min-width:200px;
-	margin:4px;
-	max-width:300px;
-	margin-left:4px;
-	display:block;
-
-	list-style-position:inside;
-	}
-
+  list-style-type: none;
+  padding: 8px 16px;
+  background-color: seagreen;
+  border-radius: 3px;
+  color: #fff;
+  min-width: 200px;
+  margin: 4px;
+  max-width: 300px;
+  margin-left: 4px;
+  display: block;
+  list-style-position: inside;
+}
 #objectiveType ul {
-	margin-left:0;
-	padding-left:0;
+  margin-left: 0;
+  padding-left: 0;
 }
-
-#objectiveType, #numberOfRooms {
-	box-model:border-box;
-}
-
-
-#objectiveType {
-}
-
-#numberOfRooms {
-	padding: 8px;
-}
-
-#numberOfRooms input{
-	border:solid 1px #555;
- 	border-radius:3px;
- 	width:3em;
- }
-
 #objectiveType .selected {
-	background-color:gold;
-	color:#111;
+  background-color: gold;
+  color: #111;
 }
-
+#objectiveType,
+#numberOfRooms {
+  box-model: border-box;
+}
+#numberOfRooms {
+  padding: 8px;
+}
+#numberOfRooms input {
+  border: solid 1px #555;
+  border-radius: 3px;
+  width: 3em;
+}
 #generateDungeon {
-	display:none;
-	width:100%;
-	border:0;
-	border-radius:3px;
-	background-color:crimson;
-	color:white;
-	height:5em;
+  display: none;
+  width: 100%;
+  border: 0;
+  border-radius: 3px;
+  background-color: crimson;
+  color: white;
+  height: 5em;
 }
-
 #liveGame {
-	clear:both;
-	display:none;
+  clear: both;
+  display: none;
 }
-
 #generateRoom {
-width:100%;
-padding:10px;
-min-width:200px;
-border:0;
-border-radius:3px;
-background-color:crimson;
-color:white;
-display:block;
-height:5em;
+  width: 100%;
+  padding: 10px;
+  min-width: 200px;
+  border: 0;
+  border-radius: 3px;
+  background-color: crimson;
+  color: white;
+  display: block;
+  height: 5em;
 }
-
 h1 {
-	font-size:1.2em;
+  font-size: 1.2em;
 }
-
-#liveMenu h2, #liveMenu h3 {
-	display:block; 
-	float:left;
-	min-height:2em;
-	line-height:2em;
-	margin-top:0;
-	padding-top:0;
-	font-weight:normal;
- } 
+#liveMenu h2,
+#liveMenu h3 {
+  display: block;
+  float: left;
+  min-height: 2em;
+  line-height: 2em;
+  margin-top: 0;
+  padding-top: 0;
+  font-weight: normal;
+}
 #liveMenu:after {
-	content:"";
-	display:block;
-	clear:both;
+  content: "";
+  display: block;
+  clear: both;
 }
-
 .roomBox {
-width:20px;
-height:20px;
-margin-right:10px;
-list-style-type:none;
-display:block;
-float:left;
-background-color:#999;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  list-style-type: none;
+  display: block;
+  float: left;
+  background-color: #999;
 }
-
 .roomBox.current {
-   background-color:red;
+  background-color: red;
 }
-
 .roomBox:after {
-content:' ';
-color:white;
-float:left;
-width:20px;
-margin-top:5px;
-margin-left:20px;
-background-color:#ccc;
-height:10px;
+  content: ' ';
+  color: white;
+  float: left;
+  width: 20px;
+  margin-top: 5px;
+  margin-left: 20px;
+  background-color: #ccc;
+  height: 10px;
 }
-
-
-.flavourtext{
-	  font-style:italic;
+.flavourtext {
+  font-style: italic;
 }
 .flavourtext:before {
-  content:'\201C';
+  content: '\201C';
 }
 .flavourtext:after {
-  content:'\201D';
+  content: '\201D';
 }
-
 #liveCards {
-	clear:both;
-	background: rgba(255,255,255,0.1);
-	border-radius:8px;
-	max-width:300px;
-	padding:8px;
-	margin:8px;
-	box-shadow : 1px 1px 1px #000;
+  clear: both;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  max-width: 300px;
+  padding: 8px;
+  margin: 8px;
+  box-shadow: 1px 1px 1px #000;
+}
+.objectiveRoom .cardArea {
+  border: solid 5px yellow;
+}
+.objectiveRoom #generateRoom {
+  display: none;
 }
