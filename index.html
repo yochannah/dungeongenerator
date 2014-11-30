@@ -4,9 +4,9 @@
 	<title>Event Generator</title>
 	<link rel="stylesheet" href="style.css" type="text/css">
 </head>
-<script src="jquery.js"></script>
-<script src="inheritance.js"></script>
-<script src="script.js"></script>
+<script src="min/jquery.min.js"></script>
+<script src="min/inheritance.min.js"></script>
+<script src="min/script.min.js"></script>
 
 <body>
 
@@ -25,8 +25,8 @@
 
 <div id="liveGame">
 	<div id="liveMenu">
-		<h2><span id="scenarioName">ScenarioName</span>: 
-		A <span id="roomNumber">12</span> room dungeon</h2>
+		<h2><span id="scenarioName">ScenarioName</span> 
+		(<span id="roomNumber">12</span>)</h2>
 	</div>
 	<!-- ul id="roomview">
 		<li alt="Room 1" class="roomBox"> </li>
@@ -34,9 +34,14 @@
 		<li alt="Room 3" class="roomBox current"> </li>
 	</ul-->
 	<div id="liveCards"></div>
-	<button id="generateRoom">Show me the next room, kthx.</button>	
+	<img src="img/left.png" class="moveCards" id="moveBackwards" alt="Go back to the previous room" />
+	<img src="img/right.png" class="moveCards" id="moveForwards" alt="Go to the next room" />
+	<!--button id="generateRoom">Show me the next room, kthx.</button-->	
 </div>
 
+<ul id="debug">
+
+</ul>
 
 <script type="text/template" id="cardTemplate">
 <link rel="stylesheet" href="style.css" type="text/css">
