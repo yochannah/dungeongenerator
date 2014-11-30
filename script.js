@@ -11,7 +11,6 @@ var Card = Class.extend({
   }
 });
 
-
 var wh = wh || {},
 debug = false;
 
@@ -25,16 +24,11 @@ wh.dungeon = {
 	highlightCorrectButtons : function (position) {
 		var $liveGame = $(document.getElementById('liveGame'));
 		if(position > 0) {
-			$liveGame.removeClass('firstRoom');
-			if(wh.dungeon.isObjective) {
-				$liveGame.addClass('objectiveRoom');			
-			} else {
-				$liveGame.removeClass('objectiveRoom');			
-			}
+			$liveGame.removeClass('firstRoom')
+				.removeClass('objectiveRoom');
 		} else {
 			$(document.getElementById('liveGame')).addClass('firstRoom');
 		}
-		console.log('g');
 	},
 	getNextCard : function(elem){
 		if (elem) {
@@ -129,14 +123,7 @@ wh.dungeon = {
 		$(document.getElementById('generateDungeon')).click(function() {
 			wh.dungeon.current.numberOfTiles = wh.dungeon.getNumberOfRooms();
 			document.getElementById('roomNumber').innerHTML = (wh.dungeon.current.numberOfTiles);
-			wh.dungeon.generateDungeon();
-			if(debug) {
-				wh.dungeon.makeDebug();
-			}
-			document.getElementById('liveGame').style.display = "block";
-			document.getElementById('gameSetup').style.display = "none";
-			//first card, yay
-    	    wh.dungeon.showCard(wh.dungeon.getNextCard());
+			wh.dungeon.showGame();
 		});
 	},
 	makeDebug : function() {
@@ -147,11 +134,39 @@ wh.dungeon = {
 		for(var i = 0; i < d.current.order.length; i++) {
 			dbtxt += "<li>" + (d.jsonTiles[d.current.order[i]].name) + "</li>";
 		}
-		
 		$debug.html(dbtxt);
 	},
 	showGenerator : function() {
 		document.getElementById('generateDungeon').style.display = 'block';		
+	},
+	save : function() {
+		localStorage.setItem('whDungeonCurrent',JSON.stringify(wh.dungeon.current));
+		//localStorage.setItem('whDungeonRaw',JSON.stringify(wh.dungeon.rawTiles));
+		localStorage.setItem('whDungeonJson',JSON.stringify(wh.dungeon.jsonTiles));
+	},
+	load : function() {
+		wh.dungeon.current = JSON.parse(localStorage.getItem('whDungeonCurrent'));
+		wh.dungeon.jsonTiles = JSON.parse(localStorage.getItem('whDungeonJson'));
+	},
+	showGame : function() {
+			wh.dungeon.generateDungeon();
+			if(debug) {
+				wh.dungeon.makeDebug();
+			}
+			document.getElementById('liveGame').style.display = "block";
+			document.getElementById('gameSetup').style.display = "none";
+			//first card, yay
+    	    wh.dungeon.showCard(wh.dungeon.getNextCard());
+	},
+	loadHome : function() {
+		$('#liveGame').hide();
+		$('#gameSetup').hide();
+		$('#newOrLoad').show();
+	},
+	loadGameSetup : function() {
+		$('#liveGame').hide();
+		$('#gameSetup').show();
+		$('#newOrLoad').hide();
 	},
 	generateDungeon : function(){
 		
@@ -225,6 +240,8 @@ wh.dungeon = {
   		return array;
 	},
 	showCard : function (room) {
+    	    wh.dungeon.save();
+	
 		var cardArea = document.getElementById('liveCards'),
 	    template = document.getElementById('cardTemplate').innerHTML;
 		
@@ -233,8 +250,7 @@ wh.dungeon = {
 		cardArea.querySelectorAll('h1')[0].innerHTML = room.name;
 		cardArea.querySelectorAll('.flavourtext')[0].innerHTML = room.flavourtext;	
 		cardArea.querySelectorAll('.cardType')[0].innerHTML = room.type;	
-		cardArea.querySelectorAll('.rules')[0].innerHTML = room.rules;	
-		
+		cardArea.querySelectorAll('.rules')[0].innerHTML = room.rules;		
 	}
 };
 
@@ -247,6 +263,14 @@ $(document).ready(function(){
     $('.moveCards').click(function(e){
     	var card = wh.dungeon.getNextCard(e.target);
     	wh.dungeon.showCard(card);
+    });
+    
+    $('#newGame').click(function(){
+    	wh.dungeon.loadGameSetup();
+    });
+    
+    $('#loadGame').click(function(){
+    	wh.dungeon.load();
     });
     
 });

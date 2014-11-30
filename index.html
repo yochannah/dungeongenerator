@@ -9,7 +9,16 @@
 <script src="min/script.min.js"></script>
 
 <body>
-
+<header>
+	<img src="img/home.png" alt="Home" />
+</header>
+<main>
+<div id="newOrLoad">
+<button id="newGame">New Game</button>
+	<div id="onlyIfThereIsASave">
+	 or <button id="loadGame">Load Game</button>
+	</div>
+</div>
 <div id="gameSetup">
 <h1>Generate a new campaign</h1>
 	<div id="selectObjective">
@@ -42,6 +51,8 @@
 <ul id="debug">
 
 </ul>
+
+</main>
 
 <script type="text/template" id="cardTemplate">
 <link rel="stylesheet" href="style.css" type="text/css">
