@@ -11,12 +11,6 @@ var Card = Class.extend({
   }
 });
 
-var Room = Card.extend({
-  init: function(xml){
-  	console.log("Room", xml);
-  }
-});
-
 
 var wh = wh || {},
 debug = false;
@@ -25,29 +19,22 @@ wh.dungeon = {
 	rawTiles:{},
 	jsonTiles : {},
 	current : {
-		position: 0
-	},
-	popup : function(room) {
-		//get template
-		//TODO: Make this dryer. Maybe make a room object model
-		var template = document.getElementById('cardTemplate'),
-		name = $(room).find('name').text(),
-		rules = $(room).find('rules').text(),
-		flavourtext = $(room).find('flavourtext').text(),
-		type = $(room).find('type').text();	
-		var thedoc = window.open('',name,'width=200,height=300,top=260');
-		thedoc.document.write(template.innerHTML);
-		thedoc.document.querySelectorAll('h1')[0].innerHTML = name;
-		thedoc.document.querySelectorAll('.rules')[0].innerHTML = rules;
-		thedoc.document.querySelectorAll('.cardType')[0].innerHTML = type;
-		thedoc.document.querySelectorAll('.flavourtext')[0].innerHTML = flavourtext;
+		position: 0,
+		isObjective : false
 	},
 	highlightCorrectButtons : function (position) {
-		if(position > 1) {
-			//ooksalunt
-			$(document.getElementById('liveGame'))
-				.removeClass('firstRoom');
+		var $liveGame = $(document.getElementById('liveGame'));
+		if(position > 0) {
+			$liveGame.removeClass('firstRoom');
+			if(wh.dungeon.isObjective) {
+				$liveGame.addClass('objectiveRoom');			
+			} else {
+				$liveGame.removeClass('objectiveRoom');			
+			}
+		} else {
+			$(document.getElementById('liveGame')).addClass('firstRoom');
 		}
+		console.log('g');
 	},
 	getNextCard : function(elem){
 		if (elem) {
@@ -62,18 +49,18 @@ wh.dungeon = {
 		}
 		position = current.order[current.position];
 		
-		wh.dungeon.highlightCorrectButtons(position);
+		wh.dungeon.highlightCorrectButtons(current.position);
 		
 		//check for objectives		
 		if(wh.dungeon.jsonTiles[position].type === "Objective") {
-			wh.dungeon.handleObjective(position);
+			wh.dungeon.handleObjective(current.position);
 		}
 		return wh.dungeon.jsonTiles[position];
 	},
 	handleObjective : function(position) {
 	 	var liveArea = document.getElementById('liveGame');
 	 	liveArea.className += "objectiveRoom";
-	 	wh.dungeon.current.order = wh.dungeon.current.order.slice(0,position); 
+	 	wh.dungeon.current.order = wh.dungeon.current.order.slice(0, position+1); 
 		console.log(wh.dungeon.current.order);
 	},
 	shownTiles : [],
