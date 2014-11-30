@@ -1,6 +1,13 @@
 var Card = Class.extend({
   init: function(xml){
-  	this
+	this.id = xml.getAttribute('id');
+	for(var j = 0; j < xml.childNodes.length; j++) {
+		var item = xml.childNodes.item(j),
+		nodeName = item.nodeName;	
+		if(item.nodeType === 1) {			
+			this[nodeName] = item.textContent;
+		}
+	}
   }
 });
 
@@ -14,6 +21,7 @@ var Room = Card.extend({
 var wh = wh || {};
 wh.dungeon = {
 	rawTiles:{},
+	jsonTiles : {},
 	current : {
 		position: 0
 	},
@@ -58,6 +66,7 @@ wh.dungeon = {
 	},
 	setRawTiles : function(xml) {
 		wh.dungeon.rawTiles = $(xml);
+		console.log('test', xml);
 	},
 	getTileType : function (type) {
 		var tiles = $.extend(true,{},wh.dungeon.rawTiles),
@@ -162,21 +171,13 @@ wh.dungeon = {
 			wh.dungeon.setupObjectives();
 		});
 	},
-	xmlCardToJson : function (xml) {
-		var obj = {},
-		id, x;
+	xmlCardsToJson : function (xml) {
+		var obj = {}, x;
 		for(var i=0; i < xml.length; i++) {
 			x = xml[i];
 			if (x.nodeType === 1) {
-				id = x.getAttribute('id');
-				obj[id] = {};
-				for(var j = 0; j < x.childNodes.length; j++) {
-					var item = x.childNodes.item(j),
-					nodeName = item.nodeName;	
-					if(item.nodeType === 1) {			
-						obj[id][nodeName] = item.textContent;
-					}
-				}
+				x = new Card(x);
+				obj[x.id] = x;
 			}
 		}
 		return obj;
@@ -230,3 +231,5 @@ $(document).ready(function(){
     });
     
 });
+
+//# sourceMappingURL=/script.min.js.map
