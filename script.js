@@ -18,7 +18,9 @@ var Room = Card.extend({
 });
 
 
-var wh = wh || {};
+var wh = wh || {},
+debug = true;
+
 wh.dungeon = {
 	rawTiles:{},
 	jsonTiles : {},
@@ -40,15 +42,20 @@ wh.dungeon = {
 		thedoc.document.querySelectorAll('.cardType')[0].innerHTML = type;
 		thedoc.document.querySelectorAll('.flavourtext')[0].innerHTML = flavourtext;
 	},
-	getNextCard : function(){
-		var position = wh.dungeon.current.position;
-		wh.dungeon.current.position++;
-		console.log(position,wh.dungeon.current.order);
-		position = wh.dungeon.current.order[position];
+	getNextCard : function(elem){
+		var direction = elem.id, 
+		current = wh.dungeon.current;		
+		if (direction === "moveForwards") {
+			current.position = current.position + 1;			
+		} else if (direction === "moveBackwards") {
+			current.position = current.position - 1;
+		}
+		position = current.order[current.position];
 		console.log(position);
-		if(position === "Objective") {
+		//check for objectives
+		
+		if(		wh.dungeon.jsonTiles[position].type === "Objective") {
 			wh.dungeon.handleObjective();
-			return wh.dungeon.getObjective();
 		}
 		return wh.dungeon.jsonTiles[position];
 	},
@@ -67,7 +74,6 @@ wh.dungeon = {
 	},
 	setRawTiles : function(xml) {
 		wh.dungeon.rawTiles = $(xml);
-		console.log('test', xml);
 	},
 	getTileType : function (type) {
 		var tiles = $.extend(true,{},wh.dungeon.rawTiles),
@@ -87,7 +93,6 @@ wh.dungeon = {
 		return document.getElementById('numberOfRoomsInput').value;
 	},
 	getObjective : function (index) {
-		console.log('ggggg', index);
 		if(typeof index == "number") {
 			return wh.dungeon.rawTiles.allObjectives[index];
 		} else if (wh.dungeon.current.objective) {
@@ -109,7 +114,6 @@ wh.dungeon = {
 	},
 	handleObjectiveClicks : function() {
 		$(document.getElementById('objectiveType')).on('click','li', function(e) {
-			console.log($(e.target).data('index'))
 			var obj = wh.dungeon.getObjective($(e.target).data('index'));
 			wh.dungeon.setObjective(obj);
 			//only highlight one at once.
@@ -126,11 +130,25 @@ wh.dungeon = {
 			wh.dungeon.current.numberOfTiles = wh.dungeon.getNumberOfRooms();
 			document.getElementById('roomNumber').innerHTML = (wh.dungeon.current.numberOfTiles);
 			wh.dungeon.generateDungeon();
+			if(debug) {
+				wh.dungeon.makeDebug();
+			}
 			document.getElementById('liveGame').style.display = "block";
 			document.getElementById('gameSetup').style.display = "none";
 			//first card, yay
     	    wh.dungeon.showCard(wh.dungeon.getNextCard());
 		});
+	},
+	makeDebug : function() {
+		var $debug = $('#debug'),
+		dbtxt = "",
+		d = wh.dungeon;
+		
+		for(var i = 0; i < d.current.order.length; i++) {
+			dbtxt += "<li>" + (d.jsonTiles[d.current.order[i]].name) + "</li>";
+		}
+		
+		$debug.html(dbtxt);
 	},
 	showGenerator : function() {
 		document.getElementById('generateDungeon').style.display = 'block';		
@@ -143,7 +161,9 @@ wh.dungeon = {
 		divisionIndex;		
 		
 		//only convert to json those tiles we'll actually be using.
-		wh.dungeon.jsonTiles = wh.dungeon.xmlCardsToJson(tiles);	
+		wh.dungeon.jsonTiles = wh.dungeon.xmlCardsToJson(tiles);
+		obj = wh.dungeon.getObjective();
+		wh.dungeon.jsonTiles[obj.id] = obj;	
 		
 		finalArray = wh.dungeon.jsonTiles.NAMELIST;	
 		//generate x random numbers / tile references
@@ -153,11 +173,10 @@ wh.dungeon = {
 		finalArray = finalArray.slice(0,wh.dungeon.current.numberOfTiles-1);
 		firstHalf = finalArray.slice(0,divisionIndex);
 		secondHalf = finalArray.slice(divisionIndex);
-		secondHalf.push('Objective');
+		secondHalf.push(wh.dungeon.getObjective().id);
 		secondHalf = wh.dungeon.shuffle(secondHalf);
 		finalArray = firstHalf.concat(secondHalf);
 		wh.dungeon.current.order = finalArray;
-		console.log(finalArray);
 	},
 	setObjective : function(objective) {
 		wh.dungeon.current.objective = new Card(objective);
@@ -225,9 +244,8 @@ $(document).ready(function(){
 	
 	wh.dungeon.init();
 
-    $('#generateRoom').click(function(){
-    	var card = wh.dungeon.getNextCard();
-    	console.log(card);
+    $('.moveCards').click(function(e){
+    	var card = wh.dungeon.getNextCard(e.target);
     	wh.dungeon.showCard(card);
     });
     

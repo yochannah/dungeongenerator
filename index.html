@@ -34,11 +34,14 @@
 		<li alt="Room 3" class="roomBox current"> </li>
 	</ul-->
 	<div id="liveCards"></div>
-	<img src="img/left.png" alt="Go back to the previous room" />
-	<img src="img/right.png" id="generateRoom" alt="Go to the next room" />
+	<img src="img/left.png" class="moveCards" id="moveBackwards" alt="Go back to the previous room" />
+	<img src="img/right.png" class="moveCards" id="moveForwards" alt="Go to the next room" />
 	<!--button id="generateRoom">Show me the next room, kthx.</button-->	
 </div>
 
+<ul id="debug">
+
+</ul>
 
 <script type="text/template" id="cardTemplate">
 <link rel="stylesheet" href="style.css" type="text/css">
