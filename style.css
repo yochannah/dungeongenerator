@@ -146,6 +146,12 @@ h1 {
   color: #fff;
   background-color: #ff6347;
 }
+.objectiveRoom #moveForwards {
+  display: none;
+}
+.firstRoom #moveBackwards {
+  display: none;
+}
 #debug {
   float: right;
 }

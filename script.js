@@ -19,7 +19,7 @@ var Room = Card.extend({
 
 
 var wh = wh || {},
-debug = true;
+debug = false;
 
 wh.dungeon = {
 	rawTiles:{},
@@ -42,26 +42,39 @@ wh.dungeon = {
 		thedoc.document.querySelectorAll('.cardType')[0].innerHTML = type;
 		thedoc.document.querySelectorAll('.flavourtext')[0].innerHTML = flavourtext;
 	},
+	highlightCorrectButtons : function (position) {
+		if(position > 1) {
+			//ooksalunt
+			$(document.getElementById('liveGame'))
+				.removeClass('firstRoom');
+		}
+	},
 	getNextCard : function(elem){
-		var direction = elem.id, 
-		current = wh.dungeon.current;		
+		if (elem) {
+			var direction = elem.id; 
+		}
+		
+		var current = wh.dungeon.current;		
 		if (direction === "moveForwards") {
 			current.position = current.position + 1;			
 		} else if (direction === "moveBackwards") {
 			current.position = current.position - 1;
 		}
 		position = current.order[current.position];
-		console.log(position);
-		//check for objectives
 		
-		if(		wh.dungeon.jsonTiles[position].type === "Objective") {
-			wh.dungeon.handleObjective();
+		wh.dungeon.highlightCorrectButtons(position);
+		
+		//check for objectives		
+		if(wh.dungeon.jsonTiles[position].type === "Objective") {
+			wh.dungeon.handleObjective(position);
 		}
 		return wh.dungeon.jsonTiles[position];
 	},
-	handleObjective : function() {
+	handleObjective : function(position) {
 	 	var liveArea = document.getElementById('liveGame');
 	 	liveArea.className += "objectiveRoom";
+	 	wh.dungeon.current.order = wh.dungeon.current.order.slice(0,position); 
+		console.log(wh.dungeon.current.order);
 	},
 	shownTiles : [],
 	readDungeon : function() {
