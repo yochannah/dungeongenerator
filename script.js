@@ -43,13 +43,14 @@ wh.dungeon = {
 	getNextCard : function(){
 		var position = wh.dungeon.current.position;
 		wh.dungeon.current.position++;
-		
+		console.log(position,wh.dungeon.current.order);
 		position = wh.dungeon.current.order[position];
+		console.log(position);
 		if(position === "Objective") {
 			wh.dungeon.handleObjective();
 			return wh.dungeon.getObjective();
 		}
-		return wh.dungeon.rawTiles.nonObjectives[position];
+		return wh.dungeon.jsonTiles[position];
 	},
 	handleObjective : function() {
 	 	var liveArea = document.getElementById('liveGame');
@@ -86,6 +87,7 @@ wh.dungeon = {
 		return document.getElementById('numberOfRoomsInput').value;
 	},
 	getObjective : function (index) {
+		console.log('ggggg', index);
 		if(typeof index == "number") {
 			return wh.dungeon.rawTiles.allObjectives[index];
 		} else if (wh.dungeon.current.objective) {
@@ -134,17 +136,18 @@ wh.dungeon = {
 		document.getElementById('generateDungeon').style.display = 'block';		
 	},
 	generateDungeon : function(){
+		
 		//count non-dungeon tiles
 		var tiles = wh.dungeon.getAllButTileType('Objective'), nos, 
-		finalArray = [], firstHalf = [], secondHalf = [],
-		divisionIndex;
-		wh.dungeon.rawTiles.nonObjectives = nos = tiles;
+		finalArray, firstHalf = [], secondHalf = [],
+		divisionIndex;		
+		
+		//only convert to json those tiles we'll actually be using.
+		wh.dungeon.jsonTiles = wh.dungeon.xmlCardsToJson(tiles);	
+		
+		finalArray = wh.dungeon.jsonTiles.NAMELIST;	
 		//generate x random numbers / tile references
 		divisionIndex = wh.dungeon.getDivisionIndex();
-
-		for(var i = 0; i < nos.length;i++) {
-			finalArray.push(i);
-		}
 		
 		finalArray = wh.dungeon.shuffle(finalArray); 
 		finalArray = finalArray.slice(0,wh.dungeon.current.numberOfTiles-1);
@@ -154,10 +157,10 @@ wh.dungeon = {
 		secondHalf = wh.dungeon.shuffle(secondHalf);
 		finalArray = firstHalf.concat(secondHalf);
 		wh.dungeon.current.order = finalArray;
+		console.log(finalArray);
 	},
 	setObjective : function(objective) {
-		wh.dungeon.current.objective = objective;
-		console.log(($(objective).find('name').text()));
+		wh.dungeon.current.objective = new Card(objective);
 		document.getElementById('scenarioName').innerHTML = ($(objective).find('name').text());
 	},
 	getDivisionIndex : function() {
@@ -172,13 +175,15 @@ wh.dungeon = {
 		});
 	},
 	xmlCardsToJson : function (xml) {
-		var obj = {}, x;
+		var obj = {}, arr = [], x;
 		for(var i=0; i < xml.length; i++) {
 			x = xml[i];
 			if (x.nodeType === 1) {
 				x = new Card(x);
 				obj[x.id] = x;
+				arr.push(x.id);
 			}
+			obj.NAMELIST = arr;
 		}
 		return obj;
 	},
@@ -202,18 +207,14 @@ wh.dungeon = {
 	},
 	showCard : function (room) {
 		var cardArea = document.getElementById('liveCards'),
-	    template = document.getElementById('cardTemplate').innerHTML,
-		name = $(room).find('name').text(),
-		rules = $(room).find('rules').text(),
-		flavourtext = $(room).find('flavourtext').text(),
-		type = $(room).find('type').text();	
+	    template = document.getElementById('cardTemplate').innerHTML;
 		
 		cardArea.innerHTML = template;			
 		
-		cardArea.querySelectorAll('h1')[0].innerHTML = name;
-		cardArea.querySelectorAll('.flavourtext')[0].innerHTML = flavourtext;	
-		cardArea.querySelectorAll('.cardType')[0].innerHTML = type;	
-		cardArea.querySelectorAll('.rules')[0].innerHTML = rules;	
+		cardArea.querySelectorAll('h1')[0].innerHTML = room.name;
+		cardArea.querySelectorAll('.flavourtext')[0].innerHTML = room.flavourtext;	
+		cardArea.querySelectorAll('.cardType')[0].innerHTML = room.type;	
+		cardArea.querySelectorAll('.rules')[0].innerHTML = room.rules;	
 		
 	}
 };
