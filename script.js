@@ -1,6 +1,6 @@
 var Card = Class.extend({
   init: function(xml){
-  	console.log(xml);
+  	this
   }
 });
 
@@ -161,6 +161,25 @@ wh.dungeon = {
 		$(document).ajaxComplete(function() {
 			wh.dungeon.setupObjectives();
 		});
+	},
+	xmlCardToJson : function (xml) {
+		var obj = {},
+		id, x;
+		for(var i=0; i < xml.length; i++) {
+			x = xml[i];
+			if (x.nodeType === 1) {
+				id = x.getAttribute('id');
+				obj[id] = {};
+				for(var j = 0; j < x.childNodes.length; j++) {
+					var item = x.childNodes.item(j),
+					nodeName = item.nodeName;	
+					if(item.nodeType === 1) {			
+						obj[id][nodeName] = item.textContent;
+					}
+				}
+			}
+		}
+		return obj;
 	},
 	shuffle : function (array) { 
 		//http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
