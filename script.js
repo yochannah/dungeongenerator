@@ -34,6 +34,7 @@ wh.dungeon = {
 	rawTiles:{},
 	current : {},
 	highlightCorrectButtons : function (position) {
+	console.log(position)
 		var $liveGame = $(document.getElementById('liveGame'));
 		if(position > 0) {
 			$liveGame.removeClass('firstRoom')
