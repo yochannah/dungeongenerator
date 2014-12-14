@@ -10,11 +10,20 @@ var Card = Class.extend({
 	}
   }
 }),
-junctionCard = Card.extend({
+JunctionCard = Card.extend({
 	init : function(xml) {
 		this._super(xml);
 	}
 	//add functions for handling junctions
+}),
+Game = Class.extend({
+	init : function() {
+		this.tiles = {};
+		this.order = [];
+		this.position = 0;
+		this.numberOfRooms = 12;
+		this.objective = null;
+	}
 });
 
 
@@ -44,9 +53,11 @@ wh.dungeon = {
 		
 		var current = wh.dungeon.current;		
 		if (direction === "moveForwards") {
-			current.position = current.position + 1;			
+			current.position = current.position + 1;
+			current.Game.position = current.Game.position + 1;
 		} else if (direction === "moveBackwards") {
 			current.position = current.position - 1;
+			current.Game.position = current.Game.position - 1;
 		}
 		position = current.order[current.position];
 		
@@ -91,7 +102,7 @@ wh.dungeon = {
 		return items;
 	},
 	getNumberOfRooms : function() {
-		return document.getElementById('numberOfRoomsInput').value;
+		return parseInt(document.getElementById('numberOfRoomsInput').value,10);
 	},
 	getObjective : function (index) {
 		if(typeof index == "number") {
@@ -128,8 +139,8 @@ wh.dungeon = {
 	},
 	handleGeneratorClicks : function() {
 		$(document.getElementById('generateDungeon')).click(function() {
+			wh.dungeon.current.Game.numberOfRooms = wh.dungeon.getNumberOfRooms();
 			wh.dungeon.current.numberOfTiles = wh.dungeon.getNumberOfRooms();
-			document.getElementById('roomNumber').innerHTML = (wh.dungeon.current.numberOfTiles);
 			wh.dungeon.generateDungeon();			
 			wh.dungeon.showGame();
 		});
@@ -204,10 +215,23 @@ wh.dungeon = {
 		secondHalf = wh.dungeon.shuffle(secondHalf);
 		finalArray = firstHalf.concat(secondHalf);
 		wh.dungeon.current.order = finalArray;
+		
+		// for the future : 
+		wh.dungeon.current.Game.tiles = wh.dungeon.jsonTiles;
+		wh.dungeon.current.Game.order = finalArray;
 	},
 	setObjective : function(objective) {
 		wh.dungeon.current.objective = new Card(objective);
-		document.getElementById('scenarioName').innerHTML = ($(objective).find('name').text());
+		wh.dungeon.current.Game.objective = new Card(objective);
+//		document.getElementById('scenarioName').innerHTML = ($(objective).find('name').text());
+	},
+	show : {
+		title : function() {
+			document.getElementById('scenarioName').innerHTML = wh.dungeon.current.Game.objective.name;
+		},
+		numberOfRooms : function() {
+			document.getElementById('roomNumber').innerHTML = wh.dungeon.current.Game.numberOfTiles;		
+		}
 	},
 	getDivisionIndex : function() {
 		divisor = 2;
@@ -220,12 +244,11 @@ wh.dungeon = {
 		$(document).ajaxComplete(function() {
 			wh.dungeon.setupObjectives();
 		});
+		wh.dungeon.current.Game = new Game();		
 	},
 	checkForOldGames : function() {
 		if(localStorage.getItem('whDungeonCurrent') !== null) {
 			wh.dungeon.loadHome();
-		} else {
-			console.log('wtf');
 		}
 	},
 	xmlCardsToJson : function (xml) {
