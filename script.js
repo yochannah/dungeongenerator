@@ -81,19 +81,34 @@ wh.dungeon = {
 	setRawTiles : function(xml) {
 		wh.dungeon.rawTiles = $(xml);
 	},
-	getTileType : function (type) {
-		var tiles = $.extend(true,{},wh.dungeon.rawTiles),
-		items = $(tiles).find("tile").filter(function(){
-              return $('type', this).text() == type;
-        });		
-		return items;
-	},
-	getAllButTileType : function (type) {
-		var tiles = $.extend(true,{},wh.dungeon.rawTiles),
-		items = $(tiles).find("tile").filter(function(){
-              return $('type', this).text() != type;
-        });		
-		return items;
+	xml : {
+		getTileType : function (type) {
+			var tiles = $.extend(true,{},wh.dungeon.rawTiles),
+			items = $(tiles).find("tile").filter(function(){
+				  return $('type', this).text() == type;
+			});		
+			return items;
+		},
+		getAllButTileType : function (type) {
+			var tiles = $.extend(true,{},wh.dungeon.rawTiles),
+			items = $(tiles).find("tile").filter(function(){
+				  return $('type', this).text() != type;
+			});		
+			return items;
+		},
+		cardsToJson : function (xml) {
+			var obj = {}, arr = [], x;
+			for(var i=0; i < xml.length; i++) {
+				x = xml[i];
+				if (x.nodeType === 1) {
+					x = new Card(x);
+					obj[x.id] = x;
+					arr.push(x.id);
+				}
+				obj.NAMELIST = arr;
+			}
+			return obj;
+		}
 	},
 	getNumberOfRooms : function() {
 		return parseInt(document.getElementById('numberOfRoomsInput').value,10);
@@ -109,7 +124,7 @@ wh.dungeon = {
 	},
 	setupObjectives : function() {
 		var objectiveList = document.getElementById('objectiveType'),
-		objs = wh.dungeon.getTileType('Objective'),
+		objs = wh.dungeon.xml.getTileType('Objective'),
 		objHtml = "";
 		wh.dungeon.rawTiles.allObjectives = objs;
 		$.each(objs, function(i,v) {
@@ -161,9 +176,9 @@ wh.dungeon = {
 			if(debug) {
 				wh.dungeon.makeDebug();
 			}
+			wh.dungeon.show.title();
+			wh.dungeon.show.numberOfRooms();
 			wh.dungeon.loadLiveGame();
-//			document.getElementById('liveGame').style.display = "block";
-//			document.getElementById('gameSetup').style.display = "none";
 			//first card, yay
     	    wh.dungeon.showCard(wh.dungeon.getNextCard());
 	},
@@ -185,12 +200,12 @@ wh.dungeon = {
 	generateDungeon : function(){
 		
 		//count non-dungeon tiles
-		var tiles = wh.dungeon.getAllButTileType('Objective'), nos, 
+		var tiles = wh.dungeon.xml.getAllButTileType('Objective'), nos, 
 		finalArray, firstHalf = [], secondHalf = [],
 		divisionIndex;		
 		
 		//only convert to json those tiles we'll actually be using.
-		wh.dungeon.current.tiles = wh.dungeon.xmlCardsToJson(tiles);
+		wh.dungeon.current.tiles = wh.dungeon.xml.cardsToJson(tiles);
 		obj = wh.dungeon.getObjective();
 		wh.dungeon.current.tiles[obj.id] = obj;	
 		
@@ -209,19 +224,18 @@ wh.dungeon = {
 	},
 	setObjective : function(objective) {
 		wh.dungeon.current.objective = new Card(objective);
-//		document.getElementById('scenarioName').innerHTML = ($(objective).find('name').text());
 	},
 	show : {
 		title : function() {
 			document.getElementById('scenarioName').innerHTML = wh.dungeon.current.objective.name;
 		},
 		numberOfRooms : function() {
-			document.getElementById('roomNumber').innerHTML = wh.dungeon.current.numberOfTiles;		
+			document.getElementById('roomNumber').innerHTML = wh.dungeon.current.numberOfRooms;		
 		}
 	},
 	getDivisionIndex : function() {
 		divisor = 2;
-		divisionIndex = wh.dungeon.current.numberOfTiles / divisor;
+		divisionIndex = wh.dungeon.current.numberOfRooms / divisor;
 		return Math.ceil(divisionIndex);
 	},
 	init : function() {
@@ -236,19 +250,6 @@ wh.dungeon = {
 		if(localStorage.getItem('whDungeonCurrent') !== null) {
 			wh.dungeon.loadHome();
 		}
-	},
-	xmlCardsToJson : function (xml) {
-		var obj = {}, arr = [], x;
-		for(var i=0; i < xml.length; i++) {
-			x = xml[i];
-			if (x.nodeType === 1) {
-				x = new Card(x);
-				obj[x.id] = x;
-				arr.push(x.id);
-			}
-			obj.NAMELIST = arr;
-		}
-		return obj;
 	},
 	shuffle : function (array) { 
 		//http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -299,7 +300,6 @@ $(document).ready(function(){
     });
     
     $('#loadGame').click(function(){
-    	console.log('go');
     	wh.dungeon.load();
 		wh.dungeon.showGame();    	
     });
