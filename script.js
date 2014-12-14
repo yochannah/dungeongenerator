@@ -32,11 +32,7 @@ debug = false;
 
 wh.dungeon = {
 	rawTiles:{},
-	jsonTiles : {},
-	current : {
-		position: 0,
-		isObjective : false
-	},
+	current : {},
 	highlightCorrectButtons : function (position) {
 		var $liveGame = $(document.getElementById('liveGame'));
 		if(position > 0) {
@@ -54,20 +50,18 @@ wh.dungeon = {
 		var current = wh.dungeon.current;		
 		if (direction === "moveForwards") {
 			current.position = current.position + 1;
-			current.Game.position = current.Game.position + 1;
 		} else if (direction === "moveBackwards") {
 			current.position = current.position - 1;
-			current.Game.position = current.Game.position - 1;
 		}
 		position = current.order[current.position];
 		
 		wh.dungeon.highlightCorrectButtons(current.position);
 		
 		//check for objectives		
-		if(wh.dungeon.jsonTiles[position].type === "Objective") {
+		if(wh.dungeon.current.tiles[position].type === "Objective") {
 			wh.dungeon.handleObjective(current.position);
 		}
-		return wh.dungeon.jsonTiles[position];
+		return wh.dungeon.current.tiles[position];
 	},
 	handleObjective : function(position) {
 	 	var liveArea = document.getElementById('liveGame');
@@ -139,8 +133,7 @@ wh.dungeon = {
 	},
 	handleGeneratorClicks : function() {
 		$(document.getElementById('generateDungeon')).click(function() {
-			wh.dungeon.current.Game.numberOfRooms = wh.dungeon.getNumberOfRooms();
-			wh.dungeon.current.numberOfTiles = wh.dungeon.getNumberOfRooms();
+			wh.dungeon.current.numberOfRooms = wh.dungeon.getNumberOfRooms();
 			wh.dungeon.generateDungeon();			
 			wh.dungeon.showGame();
 		});
@@ -151,7 +144,7 @@ wh.dungeon = {
 		d = wh.dungeon;
 		
 		for(var i = 0; i < d.current.order.length; i++) {
-			dbtxt += "<li>" + (d.jsonTiles[d.current.order[i]].name) + "</li>";
+			dbtxt += "<li>" + (d.current.tiles[d.current.order[i]].name) + "</li>";
 		}
 		$debug.html(dbtxt);
 	},
@@ -160,11 +153,9 @@ wh.dungeon = {
 	},
 	save : function() {
 		localStorage.setItem('whDungeonCurrent',JSON.stringify(wh.dungeon.current));
-		localStorage.setItem('whDungeonJson',JSON.stringify(wh.dungeon.jsonTiles));
 	},
 	load : function() {
 		wh.dungeon.current = JSON.parse(localStorage.getItem('whDungeonCurrent'));
-		wh.dungeon.jsonTiles = JSON.parse(localStorage.getItem('whDungeonJson'));
 	},
 	showGame : function() {
 			if(debug) {
@@ -199,38 +190,33 @@ wh.dungeon = {
 		divisionIndex;		
 		
 		//only convert to json those tiles we'll actually be using.
-		wh.dungeon.jsonTiles = wh.dungeon.xmlCardsToJson(tiles);
+		wh.dungeon.current.tiles = wh.dungeon.xmlCardsToJson(tiles);
 		obj = wh.dungeon.getObjective();
-		wh.dungeon.jsonTiles[obj.id] = obj;	
+		wh.dungeon.current.tiles[obj.id] = obj;	
 		
-		finalArray = wh.dungeon.jsonTiles.NAMELIST;	
+		finalArray = wh.dungeon.current.tiles.NAMELIST;	
 		//generate x random numbers / tile references
 		divisionIndex = wh.dungeon.getDivisionIndex();
 		
 		finalArray = wh.dungeon.shuffle(finalArray); 
-		finalArray = finalArray.slice(0,wh.dungeon.current.numberOfTiles-1);
+		finalArray = finalArray.slice(0,wh.dungeon.current.numberOfRooms-1);
 		firstHalf = finalArray.slice(0,divisionIndex);
 		secondHalf = finalArray.slice(divisionIndex);
 		secondHalf.push(wh.dungeon.getObjective().id);
 		secondHalf = wh.dungeon.shuffle(secondHalf);
 		finalArray = firstHalf.concat(secondHalf);
 		wh.dungeon.current.order = finalArray;
-		
-		// for the future : 
-		wh.dungeon.current.Game.tiles = wh.dungeon.jsonTiles;
-		wh.dungeon.current.Game.order = finalArray;
 	},
 	setObjective : function(objective) {
 		wh.dungeon.current.objective = new Card(objective);
-		wh.dungeon.current.Game.objective = new Card(objective);
 //		document.getElementById('scenarioName').innerHTML = ($(objective).find('name').text());
 	},
 	show : {
 		title : function() {
-			document.getElementById('scenarioName').innerHTML = wh.dungeon.current.Game.objective.name;
+			document.getElementById('scenarioName').innerHTML = wh.dungeon.current.objective.name;
 		},
 		numberOfRooms : function() {
-			document.getElementById('roomNumber').innerHTML = wh.dungeon.current.Game.numberOfTiles;		
+			document.getElementById('roomNumber').innerHTML = wh.dungeon.current.numberOfTiles;		
 		}
 	},
 	getDivisionIndex : function() {
@@ -240,11 +226,11 @@ wh.dungeon = {
 	},
 	init : function() {
 		wh.dungeon.checkForOldGames();
+		wh.dungeon.current = new Game();		
 		wh.dungeon.readDungeon();
 		$(document).ajaxComplete(function() {
 			wh.dungeon.setupObjectives();
 		});
-		wh.dungeon.current.Game = new Game();		
 	},
 	checkForOldGames : function() {
 		if(localStorage.getItem('whDungeonCurrent') !== null) {
