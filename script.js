@@ -9,7 +9,14 @@ var Card = Class.extend({
 		}
 	}
   }
+}),
+junctionCard = Card.extend({
+	init : function(xml) {
+		this._super(xml);
+	}
+	//add functions for handling junctions
 });
+
 
 var wh = wh || {},
 debug = false;
@@ -123,6 +130,7 @@ wh.dungeon = {
 		$(document.getElementById('generateDungeon')).click(function() {
 			wh.dungeon.current.numberOfTiles = wh.dungeon.getNumberOfRooms();
 			document.getElementById('roomNumber').innerHTML = (wh.dungeon.current.numberOfTiles);
+			wh.dungeon.generateDungeon();			
 			wh.dungeon.showGame();
 		});
 	},
@@ -141,7 +149,6 @@ wh.dungeon = {
 	},
 	save : function() {
 		localStorage.setItem('whDungeonCurrent',JSON.stringify(wh.dungeon.current));
-		//localStorage.setItem('whDungeonRaw',JSON.stringify(wh.dungeon.rawTiles));
 		localStorage.setItem('whDungeonJson',JSON.stringify(wh.dungeon.jsonTiles));
 	},
 	load : function() {
@@ -149,12 +156,12 @@ wh.dungeon = {
 		wh.dungeon.jsonTiles = JSON.parse(localStorage.getItem('whDungeonJson'));
 	},
 	showGame : function() {
-			wh.dungeon.generateDungeon();
 			if(debug) {
 				wh.dungeon.makeDebug();
 			}
-			document.getElementById('liveGame').style.display = "block";
-			document.getElementById('gameSetup').style.display = "none";
+			wh.dungeon.loadLiveGame();
+//			document.getElementById('liveGame').style.display = "block";
+//			document.getElementById('gameSetup').style.display = "none";
 			//first card, yay
     	    wh.dungeon.showCard(wh.dungeon.getNextCard());
 	},
@@ -166,6 +173,11 @@ wh.dungeon = {
 	loadGameSetup : function() {
 		$('#liveGame').hide();
 		$('#gameSetup').show();
+		$('#newOrLoad').hide();
+	},
+	loadLiveGame : function() {
+		$('#liveGame').show();
+		$('#gameSetup').hide();
 		$('#newOrLoad').hide();
 	},
 	generateDungeon : function(){
@@ -203,10 +215,18 @@ wh.dungeon = {
 		return Math.ceil(divisionIndex);
 	},
 	init : function() {
+		wh.dungeon.checkForOldGames();
 		wh.dungeon.readDungeon();
 		$(document).ajaxComplete(function() {
 			wh.dungeon.setupObjectives();
 		});
+	},
+	checkForOldGames : function() {
+		if(localStorage.getItem('whDungeonCurrent') !== null) {
+			wh.dungeon.loadHome();
+		} else {
+			console.log('wtf');
+		}
 	},
 	xmlCardsToJson : function (xml) {
 		var obj = {}, arr = [], x;
@@ -270,7 +290,9 @@ $(document).ready(function(){
     });
     
     $('#loadGame').click(function(){
+    	console.log('go');
     	wh.dungeon.load();
+		wh.dungeon.showGame();    	
     });
     
 });

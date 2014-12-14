@@ -10,12 +10,17 @@ main {
 	padding:1.2em;
 }
 
+.roundButton {
+	border:0;
+	border-radius:3px;
+}
+
 #objectiveType { 
 	li {
+		.roundButton;
 		list-style-type:none;
 		padding: 8px 16px;
 		background-color:seagreen;
-		border-radius:3px;
 		color:#fff;
 		min-width:200px;
 		margin:4px;
@@ -43,7 +48,7 @@ main {
 
 	 input{
 		border:solid 1px #555;
-		border-radius:3px;
+		.roundButton;
 		width:3em;
 	 }
 }
@@ -51,8 +56,7 @@ main {
 #generateDungeon {
 	display:none;
 	width:100%;
-	border:0;
-	border-radius:3px;
+	.roundButton;
 	background-color:crimson;
 	color:white;
 	height:5em;
@@ -67,18 +71,6 @@ main {
 	}
 	max-width:320px;
 }
-
-/*#generateRoom {
-	width:100%;
-	padding:10px;
-	min-width:200px;
-	border:0;
-	border-radius:3px;
-	background-color:crimson;
-	color:white;
-	display:block;
-	height:5em;
-}*/
 
 #generateRoom {
 	background-color:#fff;
@@ -168,13 +160,13 @@ h1 {
 		background-color:tomato
 	}		
 	#moveForwards {
-		display:none;
+		visibility:invisible;
 	}
 }
 
 .firstRoom {
 	#moveBackwards {
-		display:none;
+		visibility:invisible;
 	}
 }
 
@@ -186,5 +178,21 @@ header {
 	margin:-1em, -1em, 0, -1em;
 	padding:1em;
     background-color:rgba(255,255,255,0.6);
-    img { width:30px; height:30px;}
+    img { 
+    	width:30px; 
+    	height:30px;
+    	filter:brightness(450%);
+    }
+}
+
+#newOrLoad {
+	padding:10px;
+	button {
+		.roundButton;
+		padding:10px;
+		background-color:deepskyblue;
+		color:#fff;
+		margin:1em;
+		text-shadow:1px 1px 1px rgba(0,0,0,0.3);
+	}
 }
